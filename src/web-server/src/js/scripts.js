@@ -1,0 +1,53 @@
+"use strict";
+
+
+function addContact(contact, indx) {
+    $('#contactsList')
+    .append(
+        $('<li>')
+        .append(
+            $('<a>')
+            .attr('href', `mailto:${contact.email}`)
+            .text(contact.name)
+        )
+        .append(
+            $('<span>')
+            .attr('id', `cell_${indx}`)
+            .attr('class', 'hidden')
+            .text(`: ${contact.cell}`)
+        )
+        .append(
+            $('<span>')
+            .attr('id', `alert_${indx}`)
+            .attr('class', 'alert')
+            .text(' show cell')
+            .click(() => {
+                $(`#alert_${indx}`).hide();
+                $(`#cell_${indx}`).show();
+            })
+        )
+    );
+}
+
+
+
+function processData(contacts) {
+    contacts.forEach((contact, indx) => {
+        let contactName = contact.name;
+        let contactEmail = contact.email;
+        let contactCell = contact.cell;
+        
+        // Create new Contact
+        const newContact = new Contact(contactName, contactEmail, contactCell);
+        // Add Contact to List (pass contact instance and current element index in Array)
+        addContact(newContact, indx);
+    });
+}
+
+// Start Processing
+$( document ).ready(() => {
+    $.getJSON('http://localhost:3000/', contacts => {
+        console.log(contacts);
+        processData(contacts);
+    });
+});
